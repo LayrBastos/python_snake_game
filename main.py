@@ -18,13 +18,26 @@ square_size = 20
 game_speed = 15
 
 
+def draw_snake(size, snake_body):
+    for snake_part in snake_body:
+        pygame.draw.rect(screen, white, [snake_part[0], snake_part[1], size, size])
+
+
 def generate_food():
     food_x = round(random.randrange(0, screen_width - square_size) / float(square_size)) * float(square_size)
     food_y = round(random.randrange(0, screen_height - square_size) / float(square_size)) * float(square_size)
     return food_x, food_y
 
+
 def draw_food(size, x, y):
     pygame.draw.rect(screen, red, [x, y, size, size])
+
+
+def show_score(score):
+    font = pygame.font.SysFont("Helvetica", 40)
+    text = font.render(f"Score: {score}", True, green)
+    screen.blit(text, [1, 1])
+
 
 def play_game():
     game_over = False
@@ -52,10 +65,29 @@ def play_game():
 
         draw_food(square_size, food_x, food_y)
 
-        snake_body.append(x, y)
+        # Draw Snake
+        snake_body.append([x, y])
+        if len(snake_body) > snake_size:
+            del snake_body[0]
+        
+        # Check if snake hits it's own body
+        for snake_part in snake_body[:-1]:
+            if snake_part == [x, y]:
+                game_over = True
+
+        draw_snake(square_size, snake_body)
+        show_score(snake_size - 1)
 
 
+        # Update Screen
         pygame.display.update()
+
+        # Generate new food
+        if (x == food_x) and (y == food_y):
+            snake_size += 1
+            food_x, food_y = generate_food()
+
+
         clock.tick(game_speed)
 
 
