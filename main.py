@@ -44,20 +44,26 @@ def draw_food(size, x, y):
     pygame.draw.rect(screen, red, [x, y, size, size])
 
 
-def select_speed(key):
+def is_opposite_direction(current_x, current_y, new_x, new_y):
+    # Checks if player is trying to move the snake to an opposite direction
+    return (current_x == -new_x and current_y == new_y) or (current_y == -new_y and current_x == new_x)
+
+
+def select_speed(key, current_speed_x, current_speed_y):
+    new_speed_x, new_speed_y = current_speed_x, current_speed_y
     if key == pygame.K_DOWN:
-        speed_x = 0
-        speed_y = square_size
+        if not is_opposite_direction(current_speed_x, current_speed_y, 0, square_size):
+            new_speed_x, new_speed_y = 0, square_size
     elif key == pygame.K_UP:
-        speed_x = 0
-        speed_y = -square_size
+        if not is_opposite_direction(current_speed_x, current_speed_y, 0, -square_size):
+            new_speed_x, new_speed_y = 0, -square_size
     elif key == pygame.K_LEFT:
-        speed_x = -square_size
-        speed_y = 0
+        if not is_opposite_direction(current_speed_x, current_speed_y, -square_size, 0):
+            new_speed_x, new_speed_y = -square_size, 0
     elif key == pygame.K_RIGHT:
-        speed_x = square_size
-        speed_y = 0
-    return speed_x, speed_y
+        if not is_opposite_direction(current_speed_x, current_speed_y, square_size, 0):
+            new_speed_x, new_speed_y = square_size, 0
+    return new_speed_x, new_speed_y
 
 
 def show_score(score):
@@ -90,7 +96,7 @@ def play_game():
             if  event.type == pygame.QUIT:
                 game_over = True
             elif event.type == pygame.KEYDOWN:
-                speed_x, speed_y = select_speed(event.key)
+                speed_x, speed_y = select_speed(event.key, speed_x, speed_y)
 
         # Draw Food
         draw_food(square_size, food_x, food_y)
