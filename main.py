@@ -3,7 +3,7 @@ import random
 
 pygame.init()
 pygame.display.set_caption("Snake Game")
-screen_width, screen_height = 1024, 768
+screen_width, screen_height = 1200, 800
 screen = pygame.display.set_mode((screen_width, screen_height))
 clock = pygame.time.Clock()
 
@@ -12,6 +12,13 @@ black = (0, 0, 0)
 white = (255, 255, 255)
 red = (255, 0, 0)
 green = (0, 255, 0)
+yellow = (255, 255, 0)
+brown = (153, 76, 0)
+grass_green = (76, 153, 0)
+light_gray = (160, 160, 160)
+dark_gray = (128, 128, 128)
+
+
 
 # snake features
 square_size = 20
@@ -20,7 +27,12 @@ game_speed = 15
 
 def draw_snake(size, snake_body):
     for snake_part in snake_body:
-        pygame.draw.rect(screen, white, [snake_part[0], snake_part[1], size, size])
+        if snake_body.index(snake_part) == len(snake_body) -1:
+            pygame.draw.rect(screen, black, [snake_part[0], snake_part[1], size, size])
+        elif snake_body.index(snake_part) % 2 == 0:
+            pygame.draw.rect(screen, yellow, [snake_part[0], snake_part[1], size, size])
+        else:
+            pygame.draw.rect(screen, red, [snake_part[0], snake_part[1], size, size])
 
 
 def generate_food():
@@ -51,7 +63,7 @@ def select_speed(key):
 
 def show_score(score):
     font = pygame.font.SysFont("Helvetica", 40)
-    text = font.render(f"Score: {score}", True, green)
+    text = font.render(f"Score: {score}", True, black)
     screen.blit(text, [1, 1])
 
 
@@ -73,7 +85,7 @@ def play_game():
     food_x, food_y = generate_food()
 
     while not game_over:
-        screen.fill(black)
+        screen.fill(grass_green)
 
         for event in pygame.event.get():
             if  event.type == pygame.QUIT:
@@ -98,10 +110,14 @@ def play_game():
             if snake_part == [x, y]:
                 game_over = True
 
+        # Check if snake hits the screen borders
+        if (x < 0) or (x >= screen_width) or (y < 0) or (y >= screen_height):
+            game_over = True
+
         draw_snake(square_size, snake_body)
         show_score(snake_size - 1)
 
-
+        
         # Update Screen
         pygame.display.update()
 
@@ -109,7 +125,6 @@ def play_game():
         if (x == food_x) and (y == food_y):
             snake_size += 1
             food_x, food_y = generate_food()
-
 
         clock.tick(game_speed)
 
