@@ -33,6 +33,10 @@ def draw_food(size, x, y):
     pygame.draw.rect(screen, red, [x, y, size, size])
 
 
+def select_speed(key):
+    
+
+
 def show_score(score):
     font = pygame.font.SysFont("Helvetica", 40)
     text = font.render(f"Score: {score}", True, green)
@@ -62,6 +66,8 @@ def play_game():
         for event in pygame.event.get():
             if  event.type == pygame.QUIT:
                 game_over = True
+            elif event.type == pygame.KEYDOWN:
+                speed_x, speed_y = select_speed(event.key)
 
         draw_food(square_size, food_x, food_y)
 
