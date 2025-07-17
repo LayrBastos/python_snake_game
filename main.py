@@ -34,7 +34,19 @@ def draw_food(size, x, y):
 
 
 def select_speed(key):
-    
+    if key == pygame.K_DOWN:
+        speed_x = 0
+        speed_y = square_size
+    elif key == pygame.K_UP:
+        speed_x = 0
+        speed_y = -square_size
+    elif key == pygame.K_LEFT:
+        speed_x = -square_size
+        speed_y = 0
+    elif key == pygame.K_RIGHT:
+        speed_x = square_size
+        speed_y = 0   
+    return speed_x, speed_y
 
 
 def show_score(score):
@@ -69,7 +81,12 @@ def play_game():
             elif event.type == pygame.KEYDOWN:
                 speed_x, speed_y = select_speed(event.key)
 
+        # Draw Food
         draw_food(square_size, food_x, food_y)
+
+        # Update Snake's position
+        x += speed_x
+        y += speed_y
 
         # Draw Snake
         snake_body.append([x, y])
