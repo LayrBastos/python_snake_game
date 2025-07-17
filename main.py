@@ -19,7 +19,6 @@ light_gray = (160, 160, 160)
 dark_gray = (128, 128, 128)
 
 
-
 # snake features
 square_size = 20
 game_speed = 15
@@ -27,9 +26,9 @@ game_speed = 15
 
 def draw_snake(size, snake_body):
     for snake_part in snake_body:
-        if snake_body.index(snake_part) == len(snake_body) -1:
+        if snake_body.index(snake_part) == 0: # snake's head
             pygame.draw.rect(screen, black, [snake_part[0], snake_part[1], size, size])
-        elif snake_body.index(snake_part) % 2 == 0:
+        elif snake_body.index(snake_part) % 2 != 0:
             pygame.draw.rect(screen, yellow, [snake_part[0], snake_part[1], size, size])
         else:
             pygame.draw.rect(screen, red, [snake_part[0], snake_part[1], size, size])
@@ -57,7 +56,7 @@ def select_speed(key):
         speed_y = 0
     elif key == pygame.K_RIGHT:
         speed_x = square_size
-        speed_y = 0   
+        speed_y = 0
     return speed_x, speed_y
 
 
@@ -75,7 +74,7 @@ def play_game():
     y = screen_height // 2
 
     # starting move speed
-    speed_x = 0
+    speed_x = square_size # snake starts moving to the right
     speed_y = 0
 
     # snake_size
@@ -101,12 +100,12 @@ def play_game():
         y += speed_y
 
         # Draw Snake
-        snake_body.append([x, y])
+        snake_body.insert(0, [x, y])
         if len(snake_body) > snake_size:
-            del snake_body[0]
+            snake_body.pop()
         
         # Check if snake hits it's own body
-        for snake_part in snake_body[:-1]:
+        for snake_part in snake_body[1:]:
             if snake_part == [x, y]:
                 game_over = True
 
@@ -117,7 +116,6 @@ def play_game():
         draw_snake(square_size, snake_body)
         show_score(snake_size - 1)
 
-        
         # Update Screen
         pygame.display.update()
 
